@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gis.drinkit.runko.database;
 
 import gis.drinkit.runko.domain.Drinkki;
@@ -12,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import gis.drinkit.runko.domain.Opiskelija;
 
 public class DrinkkiDao implements Dao<Drinkki, Integer> {
 
@@ -48,7 +42,6 @@ public class DrinkkiDao implements Dao<Drinkki, Integer> {
 
     @Override
     public List<Drinkki> findAll() throws SQLException {
-
         Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Drinkki");
 
@@ -70,8 +63,16 @@ public class DrinkkiDao implements Dao<Drinkki, Integer> {
 
     @Override
     public void delete(Integer key) throws SQLException {
-        // ei toteutettu
+        // ei testattu
+        
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Drinkki WHERE id = ?");
+        
+        stmt.setInt(1, key);
+        stmt.executeUpdate();
+        
+        stmt.close();
+        connection.close();
     }
 
 }
-
