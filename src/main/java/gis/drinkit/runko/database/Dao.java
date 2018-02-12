@@ -1,4 +1,4 @@
-package tikape.runko.database;
+package gis.drinkit.runko.database;
 
 import java.sql.*;
 import java.util.*;

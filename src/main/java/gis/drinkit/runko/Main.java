@@ -1,16 +1,22 @@
-package tikape.runko;
+package gis.drinkit.runko;
 
-import java.util.HashMap;
-import spark.ModelAndView;
-import static spark.Spark.*;
-import spark.template.thymeleaf.ThymeleafTemplateEngine;
-import tikape.runko.database.Database;
-import tikape.runko.database.OpiskelijaDao;
+import java.io.File;
+import spark.Spark;
+import gis.drinkit.runko.database.Database;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        Database database = new Database("jdbc:sqlite:opiskelijat.db");
+        File tietokantaTiedosto = new File("db", "drinkit.db");
+        
+        Database tietokanta = new Database("jdbc:sqlite:" + tietokantaTiedosto.getAbsolutePath());
+        tietokanta.init();
+        
+        Spark.get("/", (req, res) -> {
+            return "testi";
+        });
+        
+        /*Database database = new Database("jdbc:sqlite:opiskelijat.db");
         database.init();
 
         OpiskelijaDao opiskelijaDao = new OpiskelijaDao(database);
@@ -34,6 +40,6 @@ public class Main {
             map.put("opiskelija", opiskelijaDao.findOne(Integer.parseInt(req.params("id"))));
 
             return new ModelAndView(map, "opiskelija");
-        }, new ThymeleafTemplateEngine());
+        }, new ThymeleafTemplateEngine());*/
     }
 }

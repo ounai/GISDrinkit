@@ -1,4 +1,4 @@
-package tikape.runko.domain;
+package gis.drinkit.runko.domain;
 
 public class Opiskelija {
 
