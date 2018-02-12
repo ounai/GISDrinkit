@@ -1,4 +1,4 @@
-# tikape-runko
+# GISDrinkit
 
-Tietokantojen perusteet -kurssilla tehtävän web-sovelluksen pohja.
+Tietokantojen perusteet -kurssin harjoitustyö 2, Drinkkitietokanta ja web-sovellus.
 
