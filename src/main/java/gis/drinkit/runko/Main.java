@@ -5,6 +5,7 @@ import java.io.File;
 import spark.Spark;
 import gis.drinkit.runko.database.Database;
 import gis.drinkit.runko.database.DrinkkiDao;
+import gis.drinkit.runko.domain.Ainesosa;
 import java.util.HashMap;
 import spark.ModelAndView;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -33,6 +34,10 @@ public class Main {
             return new ModelAndView(map, "drinkit");
         }, new ThymeleafTemplateEngine());
         
+//        Spark.post("/drinkit", (req, res) -> {
+//            
+//        });
+        
         Spark.get("/drinkit/:id", (req, res) -> {
             HashMap map = new HashMap();
             Integer id = Integer.parseInt(req.params("id"));
@@ -48,5 +53,13 @@ public class Main {
             
             return new ModelAndView(map, "ainesosat");
         }, new ThymeleafTemplateEngine());
+        
+        Spark.post("/ainesosat", (req, res) -> {
+            Ainesosa ainesosa = new Ainesosa(-1, req.queryParams("nimi"));
+            ainesosaDao.saveOrUpdate(ainesosa);
+
+            res.redirect("/ainesosat");
+            return "";
+        });
     }
 }

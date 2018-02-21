@@ -79,6 +79,24 @@ public class AinesosaDao implements Dao<Ainesosa, Integer> {
         stmt.close();
         connection.close();
     }
+    
+    public Ainesosa saveOrUpdate(Ainesosa ainesosa) throws SQLException {
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Ainesosa WHERE id = ?");
+            stmt.setInt(1, ainesosa.getId());
+            ResultSet result = stmt.executeQuery();
+            if (!result.next()) {
+                stmt = conn.prepareStatement(
+                        "INSERT INTO Ainesosa (nimi) VALUES (?)");
+                stmt.setInt(1, ainesosa.getId());
+                stmt.executeUpdate();
+            }
+            stmt.close();
+            result.close();
+        }
+
+        return null;
+    }
 
 }
 
