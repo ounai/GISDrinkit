@@ -88,7 +88,7 @@ public class AinesosaDao implements Dao<Ainesosa, Integer> {
             if (!result.next()) {
                 stmt = conn.prepareStatement(
                         "INSERT INTO Ainesosa (nimi) VALUES (?)");
-                stmt.setInt(1, ainesosa.getId());
+                stmt.setString(1, ainesosa.getNimi());
                 stmt.executeUpdate();
             }
             stmt.close();
