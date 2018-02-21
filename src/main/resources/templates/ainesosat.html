@@ -10,7 +10,8 @@
 
         <ol>
             <li th:each="ainesosa: ${ainesosat}">
-                <a href="/poista/${ainesosa.id}>">[poista]</a> <span th:text="${ainesosa.nimi}">ainesosan nimi</span>
+                <span th:text="${ainesosa.nimi}">ainesosan nimi</span>
+                <a href="/poista/${ainesosa.id}>">[poista]</a> 
             </li>
         </ol>
         

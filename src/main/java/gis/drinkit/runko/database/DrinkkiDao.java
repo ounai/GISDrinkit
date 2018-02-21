@@ -75,4 +75,22 @@ public class DrinkkiDao implements Dao<Drinkki, Integer> {
         connection.close();
     }
 
+    public Drinkki saveOrUpdate(Drinkki drinkki) throws SQLException {
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Drinkki WHERE nimi = ?");
+            stmt.setString(1, drinkki.getNimi());
+            ResultSet result = stmt.executeQuery();
+            if (!result.next()) {
+                stmt = conn.prepareStatement(
+                        "INSERT INTO Drinkki (nimi) VALUES (?)");
+                stmt.setString(1, drinkki.getNimi());
+                stmt.executeUpdate();
+            }
+            stmt.close();
+            result.close();
+        }
+
+        return null;
+    }
+
 }

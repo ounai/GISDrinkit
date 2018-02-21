@@ -6,6 +6,7 @@ import spark.Spark;
 import gis.drinkit.runko.database.Database;
 import gis.drinkit.runko.database.DrinkkiDao;
 import gis.drinkit.runko.domain.Ainesosa;
+import gis.drinkit.runko.domain.Drinkki;
 import java.util.HashMap;
 import spark.ModelAndView;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -34,18 +35,32 @@ public class Main {
             return new ModelAndView(map, "drinkit");
         }, new ThymeleafTemplateEngine());
         
-//        Spark.post("/drinkit", (req, res) -> {
-//            
-//        });
         
         Spark.get("/drinkit/:id", (req, res) -> {
             HashMap map = new HashMap();
             Integer id = Integer.parseInt(req.params("id"));
             
-            map.put("drink", drinkkiDao.findOne(id));
+            map.put("drinkki", drinkkiDao.findOne(id));
             
             return new ModelAndView(map, "drinkki");
         }, new ThymeleafTemplateEngine());
+        
+        // tämä ei toimi oikein... varmaan
+        Spark.get("/uusidrinkki", (req, res) -> {
+            HashMap map = new HashMap();
+            map.put("uusidrinkki", drinkkiDao.findAll());
+            
+            return new ModelAndView(map, "uusidrinkki");
+        }, new ThymeleafTemplateEngine());
+        
+        // eikä tämä...
+        Spark.post("/uusidrinkki", (req, res) -> {
+            Drinkki drinkki = new Drinkki(-1, req.queryParams("nimi"));
+            drinkkiDao.saveOrUpdate(drinkki);
+
+            res.redirect("/uusidrinkki");
+            return "";
+        });
         
         Spark.get("/ainesosat", (req, res) -> {
             HashMap map = new HashMap();
