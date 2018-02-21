@@ -10,8 +10,14 @@
 
         <ol>
             <li th:each="ainesosa: ${ainesosat}">
-                <span th:text="${ainesosa.nimi}">ainesosan nimi</span>
+                <a href="/poista/${ainesosa.id}>">[poista]</a> <span th:text="${ainesosa.nimi}">ainesosan nimi</span>
             </li>
         </ol>
+        
+        <form method="POST">
+            Nimi:<br />
+            <input type="text" name="nimi" /><br />
+            <input type="submit" value="Lisää ainesosa" />
+        </form>
     </body>
 </html>
