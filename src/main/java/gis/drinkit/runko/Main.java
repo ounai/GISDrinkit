@@ -1,5 +1,6 @@
 package gis.drinkit.runko;
 
+import gis.drinkit.runko.database.AinesosaDao;
 import java.io.File;
 import spark.Spark;
 import gis.drinkit.runko.database.Database;
@@ -17,6 +18,7 @@ public class Main {
         tietokanta.init();
         
         DrinkkiDao drinkkiDao = new DrinkkiDao(tietokanta);
+        AinesosaDao ainesosaDao = new AinesosaDao(tietokanta);
         
         Spark.get("/", (req, res) -> {
             HashMap map = new HashMap();
@@ -40,5 +42,11 @@ public class Main {
             return new ModelAndView(map, "drinkki");
         }, new ThymeleafTemplateEngine());
         
+        Spark.get("/ainesosat", (req, res) -> {
+            HashMap map = new HashMap();
+            map.put("ainesosat", ainesosaDao.findAll());
+            
+            return new ModelAndView(map, "ainesosat");
+        }, new ThymeleafTemplateEngine());
     }
 }
