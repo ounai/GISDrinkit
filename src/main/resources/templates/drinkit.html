@@ -10,8 +10,18 @@
 
         <ol>
             <li th:each="drinkki: ${drinkit}">
-                <span th:text="${drinkki.nimi}">drinkin nimi</span> <a th:href="${'/drinkit/' + drinkki.id}">linkki</a>
+                <form th:action="@{~/poista_drinkki/{id}(id=${drinkki.id})}" th:object="${drinkki}" method="post">
+                    <a th:href="${'/drinkit/' + drinkki.id}">
+                        <span th:text="${drinkki.nimi}">drinkin nimi</span>
+                    </a>
+                    <input type="submit" value="Poista drinkki"/>
+                </form>
             </li>
         </ol>
+
+        <form action="/uusidrinkki">
+            <input type="submit" value="Lisää uusi drinkki" />
+        </form>
+        <a href="/">Etusivulle</a>
     </body>
 </html>

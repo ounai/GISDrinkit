@@ -6,7 +6,24 @@
     </head>
 
     <body>
-        <h1>Drinkki <span th:text="${drinkki.nimi}">drinkki</span>!</h1>
+        <h1><span th:text="${drinkki.nimi}">drinkki</span></h1>
+        Ainesosat
+        <ol>
+            <li th:each="drinkkiAinesosa: ${drinkkiAinesosat}">
+                <span th:text="${drinkkiAinesosa.ainesosanNimi}">ainesosan nimi</span>
+                <span th:text="${drinkkiAinesosa.maara}">ainesosan maara</span>
+                <span>cl</span>
+            </li>
+        </ol>
         
+        Ohjeet
+        <ol>
+            <li th:each="drinkkiAinesosa: ${drinkkiAinesosat}">
+                <span th:text="${drinkkiAinesosa.ohje}">ainesosan ohje</span>
+            </li>
+        </ol>
+        
+        <a href="/drinkit">Takaisin drinkkeihin</a><br />
+        <a href="/">Etusivulle</a>
     </body>
 </html>

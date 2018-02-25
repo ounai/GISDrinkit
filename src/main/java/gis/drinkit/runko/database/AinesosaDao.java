@@ -6,6 +6,7 @@
 package gis.drinkit.runko.database;
 
 import gis.drinkit.runko.domain.Ainesosa;
+import gis.drinkit.runko.domain.Drinkki;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,22 +66,44 @@ public class AinesosaDao implements Dao<Ainesosa, Integer> {
 
         return ainesosat;
     }
+    
+    public List<Ainesosa> etsiDrinkinAinesosat(Drinkki drinkki) throws SQLException {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM DrinkkiAinesosa, Ainesosa WHERE drinkkiainesosa.ainesosa_id = ainesosa.id AND drinkki_id = ?");
+        stmt.setInt(1, drinkki.getId());
+        ResultSet rs = stmt.executeQuery();
+        List<Ainesosa> ainesosat = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id");
+            String nimi = rs.getString("nimi");
+
+            ainesosat.add(new Ainesosa(id, nimi));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return ainesosat;
+    }
 
     @Override
     public void delete(Integer key) throws SQLException {
-        // ei testattu
-        
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Ainesosa WHERE id = ?");
-        
-        stmt.setInt(1, key);
-        stmt.executeUpdate();
-        
-        stmt.close();
-        connection.close();
+        try (Connection connection = database.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM Ainesosa WHERE id = ?");
+
+            stmt.setInt(1, key);
+            stmt.executeUpdate();
+
+            stmt.close();
+        }
+
     }
     
     public Ainesosa saveOrUpdate(Ainesosa ainesosa) throws SQLException {
+        if (ainesosa.getNimi().isEmpty()) {
+            return null;
+        }
         try (Connection conn = database.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Ainesosa WHERE nimi = ?");
             stmt.setString(1, ainesosa.getNimi());
@@ -91,10 +114,10 @@ public class AinesosaDao implements Dao<Ainesosa, Integer> {
                 stmt.setString(1, ainesosa.getNimi());
                 stmt.executeUpdate();
             }
-            stmt.close();
-            result.close();
-        }
 
+            stmt.close();
+            result.close();           
+        }
         return null;
     }
 

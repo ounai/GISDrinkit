@@ -10,8 +10,10 @@
 
         <ol>
             <li th:each="ainesosa: ${ainesosat}">
-                <span th:text="${ainesosa.nimi}">ainesosan nimi</span>
-                <a href="/poista/${ainesosa.id}>">[poista]</a> 
+                <form th:action="@{~/poista_ainesosa/{id}(id=${ainesosa.id})}" th:object="${ainesosa}" method="post">
+                    <span th:text="${ainesosa.nimi}">ainesosan nimi</span>
+                    <input type="submit" value="Poista"/>
+                </form>
             </li>
         </ol>
         
@@ -20,5 +22,7 @@
             <input type="text" name="nimi" /><br />
             <input type="submit" value="Lisää ainesosa" />
         </form>
+        
+        <a href="/">Etusivulle</a>
     </body>
 </html>

@@ -1,6 +1,6 @@
 package gis.drinkit.runko.database;
 
-import gis.drinkit.runko.domain.Ainesosa;
+import gis.drinkit.runko.domain.Drinkki;
 import gis.drinkit.runko.domain.DrinkkiAinesosa;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -70,15 +70,54 @@ public class DrinkkiAinesosaDao implements Dao<DrinkkiAinesosa, Integer> {
         return drinkkiAinesosat;
 
     }
+    
+    public List<DrinkkiAinesosa> etsiDrinkkiAinesosat(Drinkki drinkki) throws SQLException {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM DrinkkiAinesosa, Ainesosa WHERE drinkkiainesosa.ainesosa_id = ainesosa.id AND drinkki_id = ? ORDER BY jarjestys");
+        stmt.setInt(1, drinkki.getId());
+        ResultSet rs = stmt.executeQuery();
+        List<DrinkkiAinesosa> drinkkiAinesosat = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id");
+            Integer drinkki_id = rs.getInt("drinkki_id");
+            Integer ainesosa_id = rs.getInt("ainesosa_id");
+            Integer jarjestys = rs.getInt("jarjestys");
+            float maara = rs.getFloat("maara");
+            String ohje = rs.getString("ohje");
+            String ainesosanNimi = rs.getString("nimi");
+            
+            DrinkkiAinesosa drinkkiAinesosa = new DrinkkiAinesosa(id, drinkki_id, ainesosa_id, jarjestys, maara, ohje);
+            drinkkiAinesosa.setAinesosanNimi(ainesosanNimi);
+            drinkkiAinesosat.add(drinkkiAinesosa);
+
+        }
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return drinkkiAinesosat;
+
+    }
 
     @Override
     public void delete(Integer key) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM DrinkkiAinesosa WHERE id = ?");
-        stmt.setInt(1, key);
-        stmt.executeUpdate();
-        stmt.close();
-        connection.close();
+        try (Connection connection = database.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM DrinkkiAinesosa WHERE id = ?");
+            stmt.setInt(1, key);
+            stmt.executeUpdate();
+            stmt.close();
+            connection.close();
+        }
+    }
+    
+    public void poistaKokoDrinkki(Integer key) throws SQLException {
+        try (Connection connection = database.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM DrinkkiAinesosa WHERE drinkki_id = ?");
+            stmt.setInt(1, key);
+            stmt.executeUpdate();
+            stmt.close();
+            connection.close();
+        }
     }
 
 }

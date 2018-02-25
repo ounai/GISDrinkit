@@ -8,6 +8,8 @@ public class DrinkkiAinesosa {
     private Integer jarjestys;
     private Float maara;
     private String ohje;
+    private String ainesosanNimi;
+    private String drinkinNimi;
 
     public DrinkkiAinesosa(Integer id, Integer drinkki_id, Integer ainesosa_id, Integer jarjestys, Float maara, String ohje) {
         this.id = id;
@@ -42,4 +44,20 @@ public class DrinkkiAinesosa {
         return ohje;
     }
     
+    public void setAinesosanNimi(String ainesosanNimi) {
+        this.ainesosanNimi = ainesosanNimi;
+    }
+    
+    public String getAinesosanNimi() {
+        return ainesosanNimi;
+    }
+    
+    public void setDrinkinNimi(String drinkinNimi) {
+        this.drinkinNimi = drinkinNimi;
+    }
+
+    public String getDrinkinNimi() {
+        return drinkinNimi;
+    }
+
 }

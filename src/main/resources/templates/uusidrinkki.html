@@ -6,7 +6,21 @@
     </head>
 
     <body>
-        <h1>Uusi drinkki <span th:text="${drinkki.nimi}">drinkki</span>!</h1>
-        
+        <h1>Uusi drinkki</h1>
+        <form method="POST">
+            Nimi: 
+            <input type="text" name="nimi" /><br />
+        </form>    
+        Ainesosat: <br />
+        <form action="/drinkkiainesosa">
+            <input type="submit" value="Lisää ainesosa" />
+        </form>
+
+        <br />
+        <form method="POST">    
+            <input type="submit" value="Lisää drinkki" /> <br />
+        </form>
+        <a href="/drinkit">Takaisin drinkkeihin</a><br />
+        <a href="/">Etusivulle</a>
     </body>
 </html>
