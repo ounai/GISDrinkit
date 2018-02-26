@@ -9,7 +9,10 @@ import gis.drinkit.runko.database.DrinkkiDao;
 import gis.drinkit.runko.domain.Ainesosa;
 import gis.drinkit.runko.domain.Drinkki;
 import gis.drinkit.runko.domain.DrinkkiAinesosa;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import spark.ModelAndView;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 
@@ -17,7 +20,6 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         File tietokantaTiedosto = new File("db", "drinkit.db");
-        // Testi
 
         Database tietokanta = new Database("jdbc:sqlite:" + tietokantaTiedosto.getAbsolutePath());
         tietokanta.init();
@@ -25,6 +27,8 @@ public class Main {
         DrinkkiDao drinkkiDao = new DrinkkiDao(tietokanta);
         AinesosaDao ainesosaDao = new AinesosaDao(tietokanta);
         DrinkkiAinesosaDao drinkkiAinesosaDao = new DrinkkiAinesosaDao(tietokanta);
+        List<DrinkkiAinesosa> drinkinAinesosat = new ArrayList<>();
+
 
         Spark.get("/", (req, res) -> {
             HashMap map = new HashMap();
@@ -53,7 +57,7 @@ public class Main {
  
         Spark.get("/uusidrinkki", (req, res) -> {
             HashMap map = new HashMap();
-            map.put("ainesosat", ainesosaDao.findAll());
+            map.put("ainesosat", drinkinAinesosat);
 
             return new ModelAndView(map, "uusidrinkki");
         }, new ThymeleafTemplateEngine());
@@ -61,10 +65,33 @@ public class Main {
 
 
         Spark.post("/uusidrinkki", (req, res) -> {
+            if (req.queryParams("nimi").isEmpty()) {
+                return "Anna drinkille nimi";
+            }
             Drinkki drinkki = new Drinkki(-1, req.queryParams("nimi"));
-            drinkkiDao.saveOrUpdate(drinkki);
+            drinkki = drinkkiDao.saveOrUpdate(drinkki);
+            for (int x = 0; x < drinkinAinesosat.size(); x++) {
+                DrinkkiAinesosa drinkkiAinesosa = drinkinAinesosat.get(x);
+                drinkkiAinesosa.setDrinkki_id(drinkki.getId());
+                Ainesosa ainesosa = ainesosaDao.etsiNimella(drinkkiAinesosa.getAinesosanNimi());
+                drinkkiAinesosa.setAinesosa_id(ainesosa.getId());
+                drinkkiAinesosaDao.saveOrUpdate(drinkkiAinesosa);
+            }
+            drinkinAinesosat.clear();
+            
 
             res.redirect("/drinkit");
+            return "";
+        });
+        
+        Spark.post("/poista_drinkkiainesosa/:ainesosanNimi", (req, res) -> {
+            for (int x = 0; x < drinkinAinesosat.size(); x++) {
+                if (drinkinAinesosat.get(x).getAinesosanNimi().equals(req.params(":ainesosanNimi"))) {
+                    drinkinAinesosat.remove(x);
+                }
+            }
+
+            res.redirect("/uusidrinkki");
             return "";
         });
         
@@ -75,14 +102,26 @@ public class Main {
             return new ModelAndView(map, "drinkkiainesosa");
         }, new ThymeleafTemplateEngine());
 
-//      KESKEN
-//        Spark.post("/drinkkiainesosa", (req, res) -> {
-//            DrinkkiAinesosa drinkkiAinesosa = new DrinkkiAinesosa(-1, -1, Integer.parseInt(req.queryParams("ainesosa.id")), Integer.parseInt(req.queryParams("jarjestys"), Float.parseFloat(req.queryParams("maara")), req.queryParams("ohje")));
-//            
-//
-//            res.redirect("/uusidrinkki");
-//            return "";
-//        });
+
+        Spark.post("/drinkkiainesosa", (req, res) -> {
+            
+            for(int x = 0; x < drinkinAinesosat.size(); x++) {
+                if (drinkinAinesosat.get(x).getJarjestys() == (Integer.parseInt(req.queryParams("jarjestys")))) {
+                    return "Ainesosan järjestysnumero drinkissä on jo käytössä, koitapa uudelleen";
+                }
+                if (drinkinAinesosat.get(x).getAinesosanNimi().equals(req.queryParams("ainesosanNimi"))) {
+                    return "Ainesosa on jo drinkissä, valitsepa joku toinen";
+                }
+                
+            }
+            DrinkkiAinesosa drinkkiAinesosa = new DrinkkiAinesosa(-1, -1, -1, Integer.parseInt(req.queryParams("jarjestys")), Double.parseDouble(req.queryParams("maara")), req.queryParams("ohje"));
+            drinkkiAinesosa.setAinesosanNimi(req.queryParams("ainesosanNimi"));
+            drinkinAinesosat.add(drinkkiAinesosa);
+            Collections.sort(drinkinAinesosat);
+
+            res.redirect("/uusidrinkki");
+            return "";
+        });
 
         Spark.post("/poista_drinkki/:id", (req, res) -> {
             drinkkiDao.delete(Integer.parseInt(req.params(":id")));
@@ -117,5 +156,6 @@ public class Main {
             res.redirect("/ainesosat");
             return "";
         });
+        
     }
 }

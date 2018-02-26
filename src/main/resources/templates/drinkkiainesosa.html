@@ -9,13 +9,13 @@
 
 
         <form method="post">
-            <span>Ainesosa</span>
-            <select name="userId">               
-                <option th:each="ainesosa: ${ainesosat}" th:value="${ainesosa.id}" th:text="${ainesosa.nimi}">
+            Ainesosa
+            <select name="ainesosanNimi">               
+                <option th:each="ainesosa: ${ainesosat}" th:value="${ainesosa.nimi}" th:text="${ainesosa.nimi}">
                     ainesosa
                 </option>
             </select><br />
-            <span>J‰rjesyts</span>
+            J‰rjestys
             <input type="text" name="jarjestys" /><br />
             <span>M‰‰r‰ (cl)</span>
             <input type="text" name="maara" /><br />

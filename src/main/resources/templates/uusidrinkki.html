@@ -7,17 +7,27 @@
 
     <body>
         <h1>Uusi drinkki</h1>
-        <form method="POST">
-            Nimi: 
-            <input type="text" name="nimi" /><br />
-        </form>    
-        Ainesosat: <br />
+        
         <form action="/drinkkiainesosa">
+
             <input type="submit" value="Lisää ainesosa" />
         </form>
+        <br />
+        Ainesosat: <br />
+        <ol>
+            <li th:each="drinkkiAinesosa: ${ainesosat}">             
+                <form th:action="@{~/poista_drinkkiainesosa/{ainesosanNimi}(ainesosanNimi=${drinkkiAinesosa.ainesosanNimi})}" th:object="${drinkkiAinesosa}" method="post">
+                    <span th:text="${drinkkiAinesosa.ainesosanNimi}">ainesosan nimi</span>
+                    <input type="submit" value="Poista"/>
+                </form>
+            </li>
+        </ol>
 
         <br />
-        <form method="POST">    
+        <form method="POST">
+            Drinkin nimi: 
+            <input type="text" name="nimi" /><br />
+            <br />
             <input type="submit" value="Lisää drinkki" /> <br />
         </form>
         <a href="/drinkit">Takaisin drinkkeihin</a><br />

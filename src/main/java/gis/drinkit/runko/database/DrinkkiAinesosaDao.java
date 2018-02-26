@@ -33,7 +33,7 @@ public class DrinkkiAinesosaDao implements Dao<DrinkkiAinesosa, Integer> {
         Integer drinkki_id = rs.getInt("drinkki_id");
         Integer ainesosa_id = rs.getInt("ainesosa_id");
         Integer jarjestys = rs.getInt("jarjestys");
-        float maara =  rs.getFloat("maara");
+        Double maara =  rs.getDouble("maara");
         String ohje = rs.getString("ohje");
         
 
@@ -57,7 +57,7 @@ public class DrinkkiAinesosaDao implements Dao<DrinkkiAinesosa, Integer> {
             Integer drinkki_id = rs.getInt("drinkki_id");
             Integer ainesosa_id = rs.getInt("ainesosa_id");
             Integer jarjestys = rs.getInt("jarjestys");
-            float maara =  rs.getFloat("maara");
+            Double maara =  rs.getDouble("maara");
             String ohje = rs.getString("ohje");
             
             drinkkiAinesosat.add(new DrinkkiAinesosa(id, drinkki_id, ainesosa_id, jarjestys, maara, ohje));
@@ -71,6 +71,30 @@ public class DrinkkiAinesosaDao implements Dao<DrinkkiAinesosa, Integer> {
 
     }
     
+        public DrinkkiAinesosa saveOrUpdate(DrinkkiAinesosa drinkkiAinesosa) throws SQLException {
+
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM DrinkkiAinesosa WHERE drinkki_id = ? AND ainesosa_id = ?");
+            stmt.setInt(1, drinkkiAinesosa.getDrinkki_id());
+            stmt.setInt(2, drinkkiAinesosa.getAinesosa_id());
+            ResultSet result = stmt.executeQuery();
+            if (!result.next()) {
+                stmt = conn.prepareStatement(
+                        "INSERT INTO DrinkkiAinesosa (drinkki_id, ainesosa_id, jarjestys, maara, ohje) VALUES (?, ?, ?, ?, ?)");
+                stmt.setInt(1, drinkkiAinesosa.getDrinkki_id());
+                stmt.setInt(2, drinkkiAinesosa.getAinesosa_id());
+                stmt.setInt(3, drinkkiAinesosa.getJarjestys());
+                stmt.setDouble(4, drinkkiAinesosa.getMaara());
+                stmt.setString(5, drinkkiAinesosa.getOhje());
+                stmt.executeUpdate();
+            }
+
+            stmt.close();
+            result.close();           
+        }
+        return null;
+    }
+    
     public List<DrinkkiAinesosa> etsiDrinkkiAinesosat(Drinkki drinkki) throws SQLException {
         Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM DrinkkiAinesosa, Ainesosa WHERE drinkkiainesosa.ainesosa_id = ainesosa.id AND drinkki_id = ? ORDER BY jarjestys");
@@ -82,7 +106,7 @@ public class DrinkkiAinesosaDao implements Dao<DrinkkiAinesosa, Integer> {
             Integer drinkki_id = rs.getInt("drinkki_id");
             Integer ainesosa_id = rs.getInt("ainesosa_id");
             Integer jarjestys = rs.getInt("jarjestys");
-            float maara = rs.getFloat("maara");
+            Double maara = rs.getDouble("maara");
             String ohje = rs.getString("ohje");
             String ainesosanNimi = rs.getString("nimi");
             

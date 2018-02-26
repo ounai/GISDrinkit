@@ -45,6 +45,29 @@ public class AinesosaDao implements Dao<Ainesosa, Integer> {
 
         return Ainesosa;
     }
+    
+    public Ainesosa etsiNimella(String ainesosanNimi) throws SQLException {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Ainesosa WHERE nimi = ?");
+        stmt.setObject(1, ainesosanNimi);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean hasOne = rs.next();
+        if (!hasOne) {
+            return null;
+        }
+
+        Integer id = rs.getInt("id");
+        String nimi = rs.getString("nimi");
+
+        Ainesosa Ainesosa = new Ainesosa(id, nimi);
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return Ainesosa;
+    }
 
     @Override
     public List<Ainesosa> findAll() throws SQLException {
