@@ -100,6 +100,10 @@ public class Main {
         }, new ThymeleafTemplateEngine());
 
         Spark.post("/ainesosat", (req, res) -> {
+            if (req.queryParams("nimi").isEmpty()) {
+        
+                return "Anna oikea ainesosa";
+            }
             Ainesosa ainesosa = new Ainesosa(-1, req.queryParams("nimi"));
             ainesosaDao.saveOrUpdate(ainesosa);
 
