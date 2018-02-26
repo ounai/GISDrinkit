@@ -17,6 +17,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         File tietokantaTiedosto = new File("db", "drinkit.db");
+        // Testi
 
         Database tietokanta = new Database("jdbc:sqlite:" + tietokantaTiedosto.getAbsolutePath());
         tietokanta.init();
