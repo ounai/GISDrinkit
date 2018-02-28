@@ -130,7 +130,6 @@ public class DrinkkiAinesosaDao implements Dao<DrinkkiAinesosa, Integer> {
             stmt.setInt(1, key);
             stmt.executeUpdate();
             stmt.close();
-            connection.close();
         }
     }
     
@@ -140,7 +139,6 @@ public class DrinkkiAinesosaDao implements Dao<DrinkkiAinesosa, Integer> {
             stmt.setInt(1, key);
             stmt.executeUpdate();
             stmt.close();
-            connection.close();
         }
     }
 
