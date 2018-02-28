@@ -146,8 +146,9 @@ public class Main {
         });
 
         Spark.post("/poista_drinkki/:id", (req, res) -> {
-            drinkkiDao.delete(Integer.parseInt(req.params(":id")));
             drinkkiAinesosaDao.poistaKokoDrinkki(Integer.parseInt(req.params(":id")));
+            drinkkiDao.delete(Integer.parseInt(req.params(":id")));
+            
 
             res.redirect("/drinkit");
             return "";
