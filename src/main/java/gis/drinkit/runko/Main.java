@@ -19,6 +19,10 @@ import spark.template.thymeleaf.ThymeleafTemplateEngine;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+        if (System.getenv("PORT") != null) {
+            Spark.port(Integer.valueOf(System.getenv("PORT")));
+        }
+        
         File tietokantaTiedosto = new File("db", "drinkit.db");
 
         Database tietokanta = new Database("jdbc:sqlite:" + tietokantaTiedosto.getAbsolutePath());
