@@ -1,5 +1,6 @@
 package gis.drinkit.runko.database;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,8 @@ public class Database {
         if (dbUrl != null && dbUrl.length() > 0) {
             return DriverManager.getConnection(dbUrl);
         }
-
-        return DriverManager.getConnection("jdbc:sqlite:gisdrinkit.db");
+        File tietokantaTiedosto = new File("db", "drinkit.db");
+        return DriverManager.getConnection("jdbc:sqlite:" + tietokantaTiedosto.getAbsolutePath());
     }
 
     public void init() {
