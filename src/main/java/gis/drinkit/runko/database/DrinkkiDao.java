@@ -92,6 +92,7 @@ public class DrinkkiDao implements Dao<Drinkki, Integer> {
             stmt = conn.prepareStatement("SELECT * FROM Drinkki WHERE nimi = ?");
             stmt.setString(1, drinkki.getNimi());
             result = stmt.executeQuery();
+            result.next();
             drinkki.setId(result.getInt("id"));
                     
             stmt.close();
