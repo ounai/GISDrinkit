@@ -45,6 +45,18 @@ public class DrinkkiAinesosaDao implements Dao<DrinkkiAinesosa, Integer> {
 
         return DrinkkiAinesosa;
     }
+    
+    public Boolean onkoAinesosaDrinkissa(Integer key) throws SQLException {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM DrinkkiAinesosa WHERE ainesosa_id = ?");
+        stmt.setObject(1, key);
+        ResultSet result = stmt.executeQuery();
+        if (!result.next()) {
+            return false;
+        }
+        return true;
+
+    }
 
     @Override
     public List<DrinkkiAinesosa> findAll() throws SQLException {

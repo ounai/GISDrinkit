@@ -174,6 +174,9 @@ public class Main {
         });
 
         Spark.post("/poista_ainesosa/:id", (req, res) -> {
+            if (drinkkiAinesosaDao.onkoAinesosaDrinkissa(Integer.parseInt(req.params(":id")))) {
+                return "Ainesosa käytössä jossain drinkissä. Ainesosaa ei voi poistaa";
+            }
             ainesosaDao.delete(Integer.parseInt(req.params(":id")));
 
             res.redirect("/ainesosat");
