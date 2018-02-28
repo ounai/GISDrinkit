@@ -68,8 +68,10 @@ public class Main {
             if (req.queryParams("nimi").isEmpty()) {
                 return "Anna drinkille nimi";
             }
+            
             Drinkki drinkki = new Drinkki(-1, req.queryParams("nimi"));
             drinkki = drinkkiDao.saveOrUpdate(drinkki);
+            
             for (int x = 0; x < drinkinAinesosat.size(); x++) {
                 DrinkkiAinesosa drinkkiAinesosa = drinkinAinesosat.get(x);
                 drinkkiAinesosa.setDrinkki_id(drinkki.getId());
@@ -109,12 +111,28 @@ public class Main {
                 if (drinkinAinesosat.get(x).getJarjestys() == (Integer.parseInt(req.queryParams("jarjestys")))) {
                     return "Ainesosan järjestysnumero drinkissä on jo käytössä, koitapa uudelleen";
                 }
+                
                 if (drinkinAinesosat.get(x).getAinesosanNimi().equals(req.queryParams("ainesosanNimi"))) {
                     return "Ainesosa on jo drinkissä, valitsepa joku toinen";
                 }
-                
             }
-            DrinkkiAinesosa drinkkiAinesosa = new DrinkkiAinesosa(-1, -1, -1, Integer.parseInt(req.queryParams("jarjestys")), Double.parseDouble(req.queryParams("maara")), req.queryParams("ohje"));
+            
+            int jarjestys;
+            double maara;
+            
+            try {
+                jarjestys = Integer.parseInt(req.queryParams("jarjestys"));
+            } catch(NumberFormatException e) {
+                return "Järjestys ei ole numero!";
+            }
+            
+            try {
+                maara = Double.parseDouble(req.queryParams("maara"));
+            } catch(NumberFormatException e) {
+                return "Määrä ei ole numero!";
+            }
+            
+            DrinkkiAinesosa drinkkiAinesosa = new DrinkkiAinesosa(-1, -1, -1, jarjestys, maara, req.queryParams("ohje"));
             drinkkiAinesosa.setAinesosanNimi(req.queryParams("ainesosanNimi"));
             drinkinAinesosat.add(drinkkiAinesosa);
             Collections.sort(drinkinAinesosat);
@@ -140,9 +158,9 @@ public class Main {
 
         Spark.post("/ainesosat", (req, res) -> {
             if (req.queryParams("nimi").isEmpty()) {
-        
                 return "Anna oikea ainesosa";
             }
+            
             Ainesosa ainesosa = new Ainesosa(-1, req.queryParams("nimi"));
             ainesosaDao.saveOrUpdate(ainesosa);
 

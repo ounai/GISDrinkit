@@ -124,9 +124,6 @@ public class AinesosaDao implements Dao<Ainesosa, Integer> {
     }
     
     public Ainesosa saveOrUpdate(Ainesosa ainesosa) throws SQLException {
-        if (ainesosa.getNimi().isEmpty()) {
-            return null;
-        }
         try (Connection conn = database.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Ainesosa WHERE nimi = ?");
             stmt.setString(1, ainesosa.getNimi());
