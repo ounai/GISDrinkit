@@ -13,7 +13,12 @@ public class Database {
     }
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(databaseAddress);
+        String dbUrl = System.getenv("JDBC_DATABASE_URL");
+        if (dbUrl != null && dbUrl.length() > 0) {
+            return DriverManager.getConnection(dbUrl);
+        }
+
+        return DriverManager.getConnection("jdbc:sqlite:gisdrinkit.db");
     }
 
     public void init() {
